@@ -11,7 +11,7 @@ This project uses text mining and sentiment analysis to analyze a corpus of 133 
 * **Conclusion:** The language used in earnings calls is a rich source of data for tracking corporate strategy. The findings suggest that different segments of the tech industry use technical buzzwords in unique ways, likely tied to their specific business models and marketing objectives.
 
 ## View the Full Report
-[**Complete R Markdown report with all code, commentary, and plots.**](./earningsCallAnalysis.md)
+[**Click here to view the complete rendered report**](./earningsCallAnalysis.md)
 
 ## Technology Stack & Methods
 * **Language/Libraries:** R, readtext, tm (Text Mining), data.table, tidytext, wordcloud
@@ -24,10 +24,10 @@ This project uses text mining and sentiment analysis to analyze a corpus of 133 
 
 ## Setup & How to Run
 1. Clone the repository to your local machine.
-2. The main analysis script is textMiningProject.R.
+2. Ensure you have R and RStudio installed, along with the required libraries listed in the 'Technology Stack' section.
 3. The corpus of 133 earnings call transcripts is included in the 'data' folder, making the project self-contained.
-4. Ensure you have the required R libraries installed.
-5. Run the textMiningProject.R script.
+4. Open the 'earningsCallAnalysis.Rmd' file in RStudio.
+4. To reproduce the final report ('earningsCallAnalysis.md'), you can click the 'Knit' button within RStudio.
 
 ## Data Sources
 * The corpus of 133 earnings call transcripts was sourced from the ["Earnings Call Transcripts - NASDAQ - 2016-2020"](https://www.kaggle.com/datasets/ashwinm500/earnings-call-transcripts) on Kaggle.
