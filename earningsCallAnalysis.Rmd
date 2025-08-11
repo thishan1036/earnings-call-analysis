@@ -1,7 +1,18 @@
-################################################################################
-#
-# Final Project
-#
+---
+title: "Earnings Call Analysis"
+author: "Young Han"
+
+date: "2025-05-11"
+output: github_document
+---
+## Project objective:
+Using text mining and sentiment analysis to analyze earnings call transcripts from seven major technology companies between 2016 and 2020. The goal is to uncover hidden trends in management language, quantify sentiment shifts, and identify emerging strategic themes across the market.
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+### Load libraries
+```{r}
 ################################################################################
 # External Functions
 ################################################################################
@@ -28,8 +39,11 @@ parSave=par(no.readonly = TRUE)
 ################################################################################
 # Processing
 ################################################################################
+```
 
-# load texts and turn it into a corpus ########################################
+### Load texts and turn them into corpora
+```{r}
+
 (rt=readtext("data/*_*.txt",
              docvars='filen',
              docvarn=c('date','id'),
@@ -37,9 +51,11 @@ parSave=par(no.readonly = TRUE)
 
 (co=rt %>% DFSource %>% VCorpus)
 meta(co[[55]])
+```
 
-# create title of each earnings call per company ##############################
-(textNum=co %>% length)
+### Create title of each earnings call per company
+```{r}
+textNum=co %>% length
 for (i in 1:textNum){
   txt=co[[i]] %>% content
   first200=substring(txt,1,200)     
@@ -55,9 +71,11 @@ for (i in 1:textNum){
   } else 
     meta(co[[i]],'title')=paste(cp,'Q4',yr,'earnings call')
 }
-lapply(co,meta)[1:7]
+lapply(co,meta)[1:2]
+```
 
-# clean up texts ##############################################################
+### Clean up texts
+```{r}
 for (i in 1:textNum){
   txt=content(co[[i]])
   text=unlist(strsplit(txt,'\n'))
@@ -75,9 +93,11 @@ for (i in 1:textNum){
   content(co[[i]])= cleaning
 }
 substring(content(co[[56]]),1,800)
+```
 
-# create corpus for each year #################################################
-# splitting by year to calculate sentiment difference by each year
+### Create corpus for each year
+- Splitting by year to calculate sentiment difference by each year
+```{r}
 co2016=co[1:28]
 co2017=co[29:56]
 co2018=co[57:84]
@@ -85,21 +105,22 @@ co2019=co[85:112]
 co2020=co[113:133]
 
 # Term-document & sentiment ###################################################
-(afin=as.data.table(get_sentiments('afin')))
+afin=as.data.table(get_sentiments('afin'))
 
 myCol=c('darkgrey','olivedrab','royalblue','red4','orange2')
+```
 
-# set stop words
-# some words such as 'gross', 'margin', and 'cloud' are added because the
-# sentiment dictionary flags them as negative terms. in a financial context, 
-# they are neutral
+### Set stop words and create term document matrix for each year
+```{r}
+
 myStopwords = c(stopwords(),'sync','well','thank','like','right','pretty',
                 'gross','marginal','marginally','margin','please','thanks',
                 'year','quarter')
+```
 
-# create term doc matrix for each year corpus #################################
-# set global bounds to include words that appear in at least 7 documents across
-# the entire corpus for each year to filter out noisy words
+- Some words such as 'gross', 'margin', and 'cloud' are added because the sentiment dictionary flags them as negative terms. In a financial context, they are considered as neutral.
+
+```{r}
 for (i in 2016:2020){
   yearCorpus = get(paste0('co',i))
   tdm=TermDocumentMatrix(yearCorpus,
@@ -112,13 +133,14 @@ for (i in 2016:2020){
     as.matrix
   assign(paste0('tdm',i),tdm)
 }
+```
 
-# focus on the 2016 and 2020 corpora for a comparative analysis. This period was
-# chosen to test for a significant shift in sentiment and strategic focus
-# also 5 year gap would allow enough time for major technological trends to
-# mature and be reflected in executive communication
+- Set global bounds to include words that appear in at least 7 documents across the entire corpus for each year to filter out noisy words.
 
-# frequent terms & sentiment ##################################################
+### Frequent terms & sentiment
+- Focus on the 2016 and 2020 corpora for a comparative analysis. This period was chosen to test for a significant shift in sentiment and strategic focus also 5 year gap would allow enough time for major technological trends to mature and be reflected in executive communication.
+
+```{r}
 # 2016 histogram
 tdt16=as.data.table(tdm2016,keep.rownames = 'word')
 tdt16=tdt16[afin,on=.(word),nomatch = NULL]
@@ -134,11 +156,13 @@ hist(sum16,main = 'Sentiment Score Distribution in 2016',
 skew.ratio(sum16)
 mean(sum16)
 abline(v=mean(sum16),col='black',lwd=2)
-legend('topright',
+legend('topleft',
        legend = "Avg Sentiment",
        lty = 1, lwd = 2,
-       col = 'black', bty='n')
+       col = 'black')
+```
 
+```{r}
 # 2020 histogram
 tdt20=as.data.table(tdm2020,keep.rownames = 'word')
 tdt20=tdt20[afin,on=.(word),nomatch = NULL]
@@ -157,8 +181,10 @@ abline(v=mean(sum20),col='black',lwd=2)
 legend('topright',
        legend = "Avg Sentiment",
        lty = 1, lwd = 2,
-       col = 'black', bty='n')
+       col = 'black')
+```
 
+```{r}
 # 2016 word cloud
 sums16=rowSums(tdm2016)
 dt16=data.table(word=names(sums16),freq=sums16)
@@ -166,9 +192,11 @@ dt16[word=='data']
 
 set.seed(123)
 wordcloud(names(sums16),sums16,min.freq = 220, colors=myCol,random.order = F,
-          scale = c(3.5,0.5))
-title('Year 2016',cex.main=2)
+          scale = c(2.5,0.5))
+title('2016 Words',cex.main=1)
+```
 
+```{r}
 # 2020 word cloud
 sums20=rowSums(tdm2020)
 dt20=data.table(word=names(sums20),freq=sums20)
@@ -176,15 +204,15 @@ dt20[word=='data']
 
 set.seed(123)
 wordcloud(names(sums20),sums20,min.freq = 200, colors=myCol,random.order = F,
-          scale = c(3.5,0.5))
-title('Year 2020',cex.main=2)
-# the initial word cloud analysis highlighted 'data' as a term of increasing 
-# importance (frequency grew from 281 in 2016 to 334 in 2020).
-# we came up a hypothesis that the rise of the general term 'data' might be
-# linked to a more specific, strategic focus on infrastructure, represented by
-# the phrase 'data center'.
+          scale = c(2.5,0.5))
+title('2020 Words',cex.main=1)
+```
 
-# Phrase mining ###############################################################
+- The initial word cloud analysis highlighted 'data' as a term of increasing importance (frequency grew from 281 in 2016 to 334 in 2020). We came up a hypothesis that the rise of the general term 'data' might be linked to a more specific, strategic focus on infrastructure, represented by the phrase 'data center'.
+
+### Phrase mining
+- Redundant phrases frequently used in earnings call are included in stop phrases
+```{r}
 myStopPhrases=
   c('<sync id','re seeing','little bit','ve seen','year over year',
     'constant currency','last year','year on year','ceo & director <sync id',
@@ -204,9 +232,15 @@ myStopPhrases=
     'conference call participiants','gross margin', 'conference call',
     'conference calls upon which event transcripts are based', 
     'contained in event transcripts is a textual representation')
+```
 
-# 2016 word cloud
+```{r results='hide'}
+# 2016 phrase cloud
 pd16=phraseDoc(co2016)
+```
+
+```{r}
+# 2016 phrase cloud
 pd16=removePhrases(pd16,myStopPhrases)
 pdm16=as.matrix(pd16)
 fp16=freqPhrases(pd16,100)
@@ -214,17 +248,25 @@ fp16dt=data.table(phrase=rownames(fp16),freq=fp16[,1])
 fp16dt[phrase=='data center']
 set.seed(123)
 wordcloud(rownames(fp16),fp16[,1],colors = myCol,random.order = F,
-          scale = c(3,.2))
+          scale = c(2,.1))
 title('2016 Phrases')
+```
 
+```{r}
 # 2016 bar plot
 fp16tb=fp16dt[phrase %in% c('data center','deep learning','machine learning')]
 barplot(fp16tb$freq~fp16tb$phrase,col=c('steelblue','lightcoral','seagreen'),
         ylab='Frequency',xlab=NA,border=NA,ylim=c(0,160),
         main = 'Phrase Frequency in 2016 Earnings Calls')
+```
 
-# 2020 word cloud
+```{r results='hide'}
+# 2020 phrase cloud
 pd20=phraseDoc(co2020)
+```
+
+```{r}
+# 2020 phrase cloud
 pd20=removePhrases(pd20,myStopPhrases)
 pdm20=as.matrix(pd20)
 fp20=freqPhrases(pd20,100)
@@ -232,26 +274,33 @@ fp20dt=data.table(phrase=rownames(fp20),freq=fp20[,1])
 fp20dt[phrase=='data center']
 set.seed(123)
 wordcloud(rownames(fp20),fp20[,1],colors = myCol,random.order = F,
-          scale = c(3,.2))
+          scale = c(2,.1))
 title('2020 Phrases')
+```
 
+```{r}
 # 2020 bar plot
 fp20tb=fp20dt[phrase %in% c('data center','deep learning','machine learning')]
 barplot(fp20tb$freq~fp20tb$phrase,col=c('steelblue','lightcoral','seagreen'),
         ylab='Frequency',xlab=NA,border=NA,ylim=c(0,160),
         main = 'Phrase Frequency in 2020 Earnings Calls')
-# phrase 'data center' increased over time
+```
 
-# investigate further on these phrases: 
-# data center, deep learning, machine learning
+- Phrase 'data center' increased over time
+- Investigate further on these phrases: data center, deep learning, machine learning
+```{r results='hide'}
+# line plot: phrases frequency over time
+pd17=phraseDoc(co2017)
+pd18=phraseDoc(co2018)
+pd19=phraseDoc(co2019)
+```
+
+```{r}
+# line plot: phrases frequency over time
 pp=c('data center','deep learning','machine learning')
 
-# line plot: phrases frequency vs. year
-pd17=phraseDoc(co2017)
 pd17=removePhrases(pd17,myStopPhrases)
-pd18=phraseDoc(co2018)
 pd18=removePhrases(pd18,myStopPhrases)
-pd19=phraseDoc(co2019)
 pd19=removePhrases(pd19,myStopPhrases)
 
 dc16=rowSums(getDocs(pd16,pp))
@@ -264,6 +313,9 @@ dc20=rowSums(getDocs(pd20,pp))
 (myTerm=rbind(rowSums(tdm2016)['ai'],rowSums(tdm2017)['ai'],
               rowSums(tdm2018)['ai'],rowSums(tdm2019)['ai'],
               rowSums(tdm2020)['ai']))
+```
+
+```{r}
 par(mfrow=c(2,2))
 plot(2016:2020,myPhrases[,colnames(myPhrases)[1]],type='b',col='steelblue',
      xlab=NA,ylab='Phrase Frequency',main="'Data Center' Appearance",
@@ -277,18 +329,16 @@ plot(2016:2020,myPhrases[,colnames(myPhrases)[3]],type='b',col='seagreen',
 plot(2016:2020,myTerm,type='b',col='darkorchid4',xlab='Year',
      ylab='Word Frequency',main="'AI' Appearance",ylim=c(0,270),lwd=3)
 par(mfrow=c(1,1))
-# The bar plot and line plots confirm a distinct shift in corporate language.
-# Mentions of exploratory, conceptual terms like 'deep learning' and 'machine
-# learning' decreased over the period. In contrast, 'data center', representing
-# infrastructure investment, showed a clear increasing trend
-# (dip in 2020 was due to missing second half earnings call transcripts)
+```
 
-# This suggests a potential two-phase strategic narrative employed by these
-# firms: an initial phase focused on communicating the potential of AI to build
-# investor enthusiasm, followed by a second phase focused on the execution of
-# building the infrastructure
+- The bar plot and line plots confirm a distinct shift in corporate language. Mentions of exploratory, conceptual terms like 'deep learning' and 'machine learning' decreased over the period. In contrast, 'data center', representing infrastructure investment, showed a clear increasing trend. (dip in 2020 was due to missing second half earnings call transcripts)
 
-# text clustering ############################################################
+- This suggests a potential two-phase strategic narrative employed by these firms: an initial phase focused on communicating the potential of AI to build investor enthusiasm, followed by a second phase focused on the execution of building the infrastructure.
+
+
+### Text clustering
+- Clustering based on phrases
+```{r results='hide'}
 pd=phraseDoc(co)
 pd=removePhrases(pd,myStopPhrases)
 pdm=as.matrix(pd)
@@ -307,8 +357,10 @@ c2_dt[order(-totFreq)]
 c3 = showCluster(pdm,tc$cluster,3,10) # MSFT, GOOGL, AMZN
 c3_dt = as.data.table(c3, keep.rownames = "phrase")
 c3_dt[order(-totFreq)]
+```
 
-######## based on interesting words #############################
+- Clustering based on interesting phrases
+```{r results='hide'}
 dc=getDocs(pd, 'data center')
 table(tc$cluster[colnames(dc)])
 
@@ -324,6 +376,9 @@ deep_learning <- c(21, 1, 6)
 cl_v2 = cbind("data center" = data_center, 
        "machine learning" = machine_learning, 
        "deep learning" = deep_learning)
+```
+
+```{r}
 barplot(t(cl_v2), col=c('steelblue','lightcoral','seagreen'),ylim=c(0,50), 
         names.arg = colnames(cl_v2), beside = T,
         main = 'Key Phrase Frequency by Compnay Cluster',
@@ -333,13 +388,11 @@ legend("top",
                  "Cluster 2 (ASML)", 
                  "Cluster 3 (MSFT / GOOGL / AMZN)")),
        fill=c('steelblue','lightcoral','seagreen'),bty='n')
+```
 
-# 133 documents were grouped into three clusters based on phrase similarity to
-# identify distinct communication patterns.
-# cluster 1: hardware focused firms: AMD, NVDA, AAPL
-# cluster 2: specialized equipment supplier: ASML
-# cluster 3: cloud/platform focused firms: MSFT, GOOGLE, AMZN
+- 133 documents were grouped into three clusters based on phrase similarity to identify distinct communication patterns.
+  - cluster 1: hardware focused firms: AMD, NVDA, AAPL
+  - cluster 2: specialized equipment supplier: ASML
+  - cluster 3: cloud/platform focused firms: MSFT, GOOGLE, AMZN
 
-# hardware companies emphasize technical terms in overall in their communication
-# cloud focused firms speak more about the infrastructure ('data center') and 
-# less about the specific underlying technologies
+- Hardware companies emphasize technical terms in overall in their communication cloud focused firms speak more about the infrastructure ('data center') and less about the specific underlying technologies.
