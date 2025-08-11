@@ -10,6 +10,9 @@ This project uses text mining and sentiment analysis to analyze a corpus of 133 
 
 * **Conclusion:** The language used in earnings calls is a rich source of data for tracking corporate strategy. The findings suggest that different segments of the tech industry use technical buzzwords in unique ways, likely tied to their specific business models and marketing objectives.
 
+## View the Full Report
+[**Complete R Markdown report with all code, commentary, and plots.**](./earningsCallAnalysis.md)
+
 ## Technology Stack & Methods
 * **Language/Libraries:** R, readtext, tm (Text Mining), data.table, tidytext, wordcloud
 * **Techniques:**
