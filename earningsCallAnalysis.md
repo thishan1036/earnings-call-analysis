@@ -575,13 +575,13 @@ legend("top",
        fill=c('steelblue','lightcoral','seagreen'),bty='n')
 ```
 
-![](earningsCallAnalysis_files/figure-gfm/unnamed-chunk-24-1.png)<!-- --> -
-133 documents were grouped into three clusters based on phrase
-similarity to identify distinct communication patterns. - cluster 1:
-hardware focused firms: AMD, NVDA, AAPL - cluster 2: specialized
-equipment supplier: ASML - cluster 3: cloud/platform focused firms:
-MSFT, GOOGLE, AMZN
+![](earningsCallAnalysis_files/figure-gfm/unnamed-chunk-24-1.png)<!-- -->
 
+- 133 documents were grouped into three clusters based on phrase
+  similarity to identify distinct communication patterns.
+  - cluster 1: hardware focused firms: AMD, NVDA, AAPL
+  - cluster 2: specialized equipment supplier: ASML
+  - cluster 3: cloud/platform focused firms: MSFT, GOOGLE, AMZN
 - Hardware companies emphasize technical terms in overall in their
   communication cloud focused firms speak more about the infrastructure
   (‘data center’) and less about the specific underlying technologies.

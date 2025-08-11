@@ -390,6 +390,7 @@ legend("top",
        fill=c('steelblue','lightcoral','seagreen'),bty='n')
 ```
 
+
 - 133 documents were grouped into three clusters based on phrase similarity to identify distinct communication patterns.
   - cluster 1: hardware focused firms: AMD, NVDA, AAPL
   - cluster 2: specialized equipment supplier: ASML
