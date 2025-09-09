@@ -1,14 +1,16 @@
-# Earnings Call Analysis
+# Strategic Intelligence: Tracking Tech Industry Shifts Through Earnings Call Analysis
 
-## Project Objective
-This project uses text mining and sentiment analysis to analyze a corpus of 133 earnings call transcripts from seven major technology companies between 2016 and 2020. The goal is to uncover hidden trends in management language, quantify sentiment shifts, and identify emerging strategic themes across the market.
+## Objective
+To provide an investment client with actionable intelligence and insight on the strategic direction of major tech players. This analysis answers the critical question: Are market leaders prioritizing future R&D (e.g., 'deep learning') or scaling current infrastructure (e.g., 'data center')? The answer indicates where capital is flowing and which segments are poised for growth.
 
-## Key Findings & Conclusion
-* **Shift in Strategic Focus:** The analysis revealed a distinct narrative shift over the 5-year period. Communication in 2016 was heavy with exploratory, conceptual terms like "deep learning," while communication in 2020 shifted towards concrete, infrastructure-focused terms like "data center". This suggests a strategic move from communicating AI's potential to executing on its infrastructural requirements.
+## Executive Summary 
+* **Key Finding 1:** Analysis of 133 transcripts revealed a quantifiable narrative shift from exploratory terms (e.g., 'deep learning') in 2016 to infrastructure-focused terms (e.g., 'data center') in 2020, indicating a market-wide pivot from R&D to implementation.
 
-* **Successful Business Model Clustering:** Using text clustering, the analysis grouped the seven companies into three distinct and logical business segments based purely on their language: a Hardware-focused cluster (AMD, NVDA, AAPL), a specialized equipment supplier (ASML), and a Cloud/Platform cluster (MSFT, GOOGL, AMZN).
+* **Key Finding 2:** Unsupervised clustering based on phrase similarity successfully segmented companies into distinct strategic groups (Hardware vs. Cloud), providing a data-driven method for competitive landscape analysis.
 
-* **Conclusion:** The language used in earnings calls is a rich source of data for tracking corporate strategy. The findings suggest that different segments of the tech industry use technical buzzwords in unique ways, likely tied to their specific business models and marketing objectives.
+* **Business Value:** This methodology provides a repeatable, scalable framework for generating quarterly competitive intelligence, allowing stakeholders to anticipate market trends and validate strategic assumptions.
+
+* **Recommendation:** Implement this NLP framework as a quarterly tracking tool to monitor competitors' strategic shifts in real-time. This provides an early warning system for market disruption and informs investment strategy with live, data-driven insights.
 
 ## View the Full Report
 [**Click here to view the complete rendered report**](./earningsCallAnalysis.md)
